@@ -16,9 +16,23 @@ def createCube():
         cube = bpy.context.object
         
         object_color = Color()
-        object_color.hsv = (random.uniform(0.03, 0.07), random.uniform(0.4, 0.8), random.uniform(1, 0))
+        object_color.hsv = (random.uniform(0.28, 0.55), random.uniform(0.9, 1.0), random.uniform(0, 1))
         
         cube.color = (object_color.r, object_color.g, object_color.b, 1)
+
+        currentmesh = bpy.context.object.data
+
+
+        for vert in currentmesh.vertices:
+            angle = math.radians((vert.co.z + 1) * 45)
+            
+            x = vert.co.x * math.cos(angle) - vert.co.y * math.sin(angle)
+            y = vert.co.x * math.sin(angle) + vert.co.y * math.cos(angle)
+    
+    vert.co.x = x
+    vert.co.y = y
+    currentmesh.update()
+
 
 
 
