@@ -1,13 +1,4 @@
 import bpy
-import math
-import mathutils
-from mathutils import Color
-import random
-
-#TODO 
-# - Definition von cube als Objekt stimmt noch nicht, bzw. die Selektion als ausgewähltes Objekt (obj.select_set(True))
-# - join usw. nach lastIteration wird nicht ausgeführt
-
 
 cubeList = []
 
@@ -15,84 +6,100 @@ bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete()
 
 def createCube(cSize): 
+
     bpy.ops.mesh.primitive_cube_add(size=cSize, location=(0, 0, 0), scale=(1, 1, 1))
 
 
-def duplicate(cube):
-    # Definition von cube als Objekt stimmt noch nicht, bzw. die Selektion als ausgewähltes Objekt (obj.select_set(True))
-    tempCube: bpy.types.Object = cube
-    tempCube.select_set(True)
-    bpy.context.view_layer.objects.active = tempCube
-    bpy.ops.object.duplicate()
+def duplicate(cube, iterationRemaining):
+
+    bpy.ops.object.select_all(action='DESELECT')
+    cube.select_set(True)
+    bpy.context.view_layer.objects.active = cube
+    bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False})
+    if bool(iterationRemaining) == True:
+        duplicatedCube = bpy.context.selected_objects[0]
+        cubeList.append(duplicatedCube)
     dimensions = bpy.context.object.dimensions
     bpy.context.object.dimensions = dimensions[0] / 2, dimensions[1] / 2, dimensions[2] / 2
 
 
 def createIterationRemaining(cube):
-    # Definition von cube als Objekt stimmt noch nicht, bzw. die Selektion als ausgewähltes Objekt (obj.select_set(True))
-    tempCube: bpy.types.Object = cube
-    tempCube.select_set(True)
-    bpy.context.view_layer.objects.active = tempCube
+
+    bpy.ops.object.select_all(action='DESELECT')
+    cube.select_set(True)
+    bpy.context.view_layer.objects.active = cube
     cubeSize = bpy.context.object.dimensions[0] * 3/4
 
-    cubeList.append(duplicate(tempCube))
-    bpy.context.object.location =  (bpy.context.object.location.x + cubeSize, bpy.context.object.location.y, bpy.context.object.location.z)
+    x = bpy.context.object.location.x
+    y = bpy.context.object.location.y
+    z = bpy.context.object.location.z
 
-    cubeList.append(duplicate(tempCube))
-    bpy.context.object.location =  (bpy.context.object.location.x - cubeSize, bpy.context.object.location.y, bpy.context.object.location.z)
+    duplicate(cube, True)
+    bpy.context.object.location =  (x + cubeSize, y, z)
 
-    cubeList.append(duplicate(tempCube))
-    bpy.context.object.location =  (bpy.context.object.location.x, bpy.context.object.location.y + cubeSize, bpy.context.object.location.z)
+    duplicate(cube, True)
+    bpy.context.object.location =  (x - cubeSize, y, z)
 
-    cubeList.append(duplicate(tempCube))
-    bpy.context.object.location =  (bpy.context.object.location.x, bpy.context.object.location.y - cubeSize, bpy.context.object.location.z)
+    duplicate(cube, True)
+    bpy.context.object.location =  (x, y + cubeSize, z)
 
-    cubeList.append(duplicate(tempCube))
-    bpy.context.object.location =  (bpy.context.object.location.x, bpy.context.object.location.y, bpy.context.object.location.z + cubeSize)
+    duplicate(cube, True)
+    bpy.context.object.location =  (x, y - cubeSize, z)
 
-    cubeList.append(duplicate(tempCube))
-    bpy.context.object.location =  (bpy.context.object.location.x, bpy.context.object.location.y, bpy.context.object.location.z - cubeSize)
+    duplicate(cube, True)
+    bpy.context.object.location =  (x, y, z + cubeSize)
+
+    duplicate(cube, True)
+    bpy.context.object.location =  (x, y, z - cubeSize)
 
 def createLastIteration(cube):
-    # Definition von cube als Objekt stimmt noch nicht, bzw. die Selektion als ausgewähltes Objekt (obj.select_set(True))
-    tempCube: bpy.types.Object = cube
-    tempCube.select_set(True)
-    bpy.context.view_layer.objects.active = tempCube
+    
+    bpy.ops.object.select_all(action='DESELECT')
+    cube.select_set(True)
+    bpy.context.view_layer.objects.active = cube
     cubeSize = bpy.context.object.dimensions[0] * 3/4
 
-    duplicate(tempCube)
-    bpy.context.object.location =  (bpy.context.object.location.x + cubeSize, bpy.context.object.location.y, bpy.context.object.location.z)
+    x = bpy.context.object.location.x
+    y = bpy.context.object.location.y
+    z = bpy.context.object.location.z
 
-    duplicate(tempCube)
-    bpy.context.object.location =  (bpy.context.object.location.x - cubeSize, bpy.context.object.location.y, bpy.context.object.location.z)
+    duplicate(cube, False)
+    bpy.context.object.location =  (x + cubeSize, y, z)
 
-    duplicate(tempCube)
-    bpy.context.object.location =  (bpy.context.object.location.x, bpy.context.object.location.y + cubeSize, bpy.context.object.location.z)
+    duplicate(cube, False)
+    bpy.context.object.location =  (x - cubeSize, y, z)
 
-    duplicate(tempCube)
-    bpy.context.object.location =  (bpy.context.object.location.x, bpy.context.object.location.y - cubeSize, bpy.context.object.location.z)
+    duplicate(cube, False)
+    bpy.context.object.location =  (x, y + cubeSize, z)
 
-    duplicate(tempCube)
-    bpy.context.object.location =  (bpy.context.object.location.x, bpy.context.object.location.y, bpy.context.object.location.z + cubeSize)
+    duplicate(cube, False)
+    bpy.context.object.location =  (x, y - cubeSize, z)
 
-    duplicate(tempCube)
-    bpy.context.object.location =  (bpy.context.object.location.x, bpy.context.object.location.y, bpy.context.object.location.z - cubeSize)
+    duplicate(cube, False)
+    bpy.context.object.location =  (x, y, z + cubeSize)
+
+    duplicate(cube, False)
+    bpy.context.object.location =  (x, y, z - cubeSize)
     
 
 def iterateCube(iterations, firstIteration):
+
+    if iterations == 0:
+        return
 
     if bool(firstIteration) == False:
         if iterations > 1:
             iterations -= 1
             for i in cubeList:
                 createIterationRemaining(i)
-            iterateCube(iterations, False)
+                cubeList.remove(i)
+            #iterateCube(iterations, False)
         
         elif iterations == 1:
             iterations -= 1
             for i in cubeList:
                 createLastIteration(i)
-            # wird aktuell nicht ausgeführt:
+                cubeList.remove(i)
             bpy.ops.object.select_all(action='SELECT')
             bpy.ops.object.join()
             dimensions = bpy.context.object.dimensions
@@ -100,6 +107,7 @@ def iterateCube(iterations, firstIteration):
             bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='MEDIAN')
             bpy.context.object.location = (0,0,0)
             bpy.ops.object.transform_apply(scale=True)
+            return
 
     elif bool(firstIteration) == True:
         cube = bpy.data.objects['Cube']
@@ -109,12 +117,11 @@ def iterateCube(iterations, firstIteration):
         if iterations > 1:
             iterations -= 1
             createIterationRemaining(cube)
-            iterateCube(iterations, False)
+            #iterateCube(iterations, False)
         
         elif iterations == 1:
             iterations -= 1
             createLastIteration(cube)
-            # wird aktuell nicht ausgeführt:
             bpy.ops.object.select_all(action='SELECT')
             bpy.ops.object.join()
             dimensions = bpy.context.object.dimensions
@@ -122,8 +129,11 @@ def iterateCube(iterations, firstIteration):
             bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='MEDIAN')
             bpy.context.object.location = (0,0,0)
             bpy.ops.object.transform_apply(scale=True)
+            return
+    
+    iterateCube(iterations, False)
 
 
 
 createCube(1)
-iterateCube(1, True)
+iterateCube(2, True)
