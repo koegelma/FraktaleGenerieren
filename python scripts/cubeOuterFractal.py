@@ -4,8 +4,11 @@ objectList = []
 addToObjectList = []
 alreadyIteratedList = []
 
-bpy.ops.object.select_all(action='SELECT')
-bpy.ops.object.delete()
+
+
+def deleteAll():
+    bpy.ops.object.select_all(action='SELECT')
+    bpy.ops.object.delete() 
 
 def createCube(cSize): 
 
@@ -61,6 +64,7 @@ def createIteration(object, iterationRemaining):
 
 
 def joinAndResize():
+    
     bpy.ops.object.select_all(action='SELECT')
     bpy.ops.object.join()
     dimensions = bpy.context.object.dimensions
@@ -73,11 +77,7 @@ def joinAndResize():
 def iterateObject(iterations, firstIteration):
 
     if iterations == 0:
-        #print("Iterations is 0 and Elements in Cubelist: ", len(cubeList))
         return
-
-    #print("Iterations: ", iterations)
-    #print("Elements in Cubelist: ", len(cubeList))
 
     if not bool(firstIteration):
         if iterations > 1:
@@ -115,7 +115,7 @@ def iterateObject(iterations, firstIteration):
     iterateObject(iterations, False)
 
 
-
+#deleteAll()
 #createCube(1)
 #createSphere(1)
-iterateObject(3, True)
+#iterateObject(3, True)
