@@ -3,7 +3,7 @@ Repository für die Abgabe in der Veranstaltung Datenverarbeitung in der Medienp
 
 Installation:
 
-- Datei "_init_.py" im Ordner /python scripts/Addon mit VSC öffnen.
+- Datei "_init_.py" im Ordner "./python scripts/Addon" mit VSC öffnen.
 
 - Blender mit Addon "Blender Development" öffnen.
 
