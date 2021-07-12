@@ -5,6 +5,6 @@ Installation:
 
 - Datei "_init_.py" im Ordner "./python scripts/Addon" mit VSC öffnen.
 
-- Blender mit Addon "Blender Development" öffnen.
+- Blender mit der VSC Extension "Blender Development" öffnen.
 
 © Johann Schulenburg & Marius Kögel
