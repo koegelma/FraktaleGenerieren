@@ -286,7 +286,7 @@ class OBJECT_OT_spirale(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class randomOP(bpy.types.Operator):
+class OBJECT_OT_randomOP(bpy.types.Operator):
     """ Random Operator """
     bl_idname = "object.random_op"
     bl_label = ""
@@ -390,7 +390,7 @@ def register():
     bpy.utils.register_class(OBJECT_OT_iterations_inner)
     bpy.utils.register_class(fractalPanel)
     bpy.utils.register_class(OBJECT_OT_spirale)
-    bpy.utils.register_class(randomOP)
+    bpy.utils.register_class(OBJECT_OT_randomOP)
     bpy.ops.object.add_iterations_outer('INVOKE_DEFAULT')
     bpy.ops.object.add_iterations_inner('INVOKE_DEFAULT')
     bpy.ops.object.create_spirale('INVOKE_DEFAULT')
@@ -401,4 +401,4 @@ def unregister():
     bpy.utils.unregister_class(fractalPanel)
     bpy.utils.unregister_class(OBJECT_OT_iterations_inner)
     bpy.utils.unregister_class(OBJECT_OT_spirale)
-    bpy.utils.unregister_class(randomOP)
+    bpy.utils.unregister_class(OBJECT_OT_randomOP)
