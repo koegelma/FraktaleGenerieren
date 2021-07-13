@@ -1,9 +1,8 @@
 import bpy
-from bpy.props import IntProperty
 import math
 import random
-
 from bpy.types import Operator
+from bpy.props import IntProperty
 
 bl_info = {
     "name": "Fractal Generator",
@@ -26,8 +25,6 @@ class OBJECT_OT_iterations_outer(bpy.types.Operator):
     ITERATIONS: bpy.props.IntProperty(
         name="Number of Iterations",
         description="WARNING: Creating more than 3 Iterations could lead to performance issues!",
-        # min=1,
-        # max=5,
         default=1
         # options={"HIDDEN"}
     )
@@ -289,7 +286,7 @@ class OBJECT_OT_spirale(bpy.types.Operator):
 class OBJECT_OT_randomOP(bpy.types.Operator):
     """ Random Operator """
     bl_idname = "object.random_op"
-    bl_label = ""
+    bl_label = "Feel Lucky?"
     bl_options = {"REGISTER", "UNDO"}
 
     def joinAndResize(self):
