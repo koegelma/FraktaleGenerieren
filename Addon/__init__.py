@@ -3,17 +3,10 @@ import math
 import random
 from bpy.types import Operator
 from bpy.props import IntProperty
-
-# TODO:
-# - Klassenaufteilung
-# - Random Button Parameter beschränken
-# - Mandelbulb Operator
-
-
 bl_info = {
-    "name": "Fractal Generator",
+    "name": "Fractal Generator Addon",
     "author": "Johann / Marius",
-    "description": "Generate/Modify Fractal Objects",
+    "description": "Generate / Modify Fractal Objects",
     "blender": (2, 80, 0),
     "version": (1, 0, 0),
     "location": "",
@@ -23,7 +16,6 @@ bl_info = {
 
 
 class OBJECT_OT_iterations_outer(bpy.types.Operator):
-    """ Add iterations for an object """
     bl_idname = "object.add_iterations_outer"
     bl_label = "Add Iterations"
     bl_options = {"REGISTER", "UNDO"}
@@ -32,7 +24,6 @@ class OBJECT_OT_iterations_outer(bpy.types.Operator):
         name="Number of Iterations",
         description="WARNING: Creating more than 3 Iterations could lead to performance issues!",
         default=1
-        # options={"HIDDEN"}
     )
 
     objectList = []
@@ -160,7 +151,6 @@ class OBJECT_OT_iterations_outer(bpy.types.Operator):
 
 
 class OBJECT_OT_iterations_inner(bpy.types.Operator):
-    """ Add inner iterations for an object """
     bl_idname = "object.add_iterations_inner"
     bl_label = "Add Iterations"
     bl_options = {"REGISTER", "UNDO"}
@@ -262,9 +252,8 @@ class OBJECT_OT_iterations_inner(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class OBJECT_OT_spirale(bpy.types.Operator):
-    """ Create Fibonacci Spiral """
-    bl_idname = "object.create_spirale"
+class OBJECT_OT_spiral(bpy.types.Operator):
+    bl_idname = "object.create_spiral"
     bl_label = "Create Fibonacci Spiral"
     bl_options = {"REGISTER", "UNDO"}
 
@@ -333,25 +322,18 @@ class OBJECT_OT_randomOP(bpy.types.Operator):
         if (randomObject == 1):
             bpy.ops.mesh.primitive_cube_add(
                 size=1, location=(0, 0, 0), scale=(1, 1, 1))
-
         if (randomObject == 2):
-            #bpy.ops.mesh.primitive_uv_sphere_add(
-            #    radius=1, location=(0, 0, 0), scale=(1, 1, 1))
-            bpy.ops.mesh.primitive_cube_add(
-                size=1, location=(0, 0, 0), scale=(1, 1, 1))
-
+            bpy.ops.mesh.primitive_uv_sphere_add(
+                radius=1, location=(0, 0, 0), scale=(1, 1, 1))
         if (randomObject == 3):
             bpy.ops.mesh.primitive_ico_sphere_add(
                 radius=1, location=(0, 0, 0), scale=(1, 1, 1))
-
         if (randomObject == 4):
             bpy.ops.mesh.primitive_cylinder_add(
                 radius=1, depth=2, location=(0, 0, 0), scale=(1, 1, 1))
-
         if (randomObject == 5):
             bpy.ops.mesh.primitive_cone_add(
                 radius1=1, radius2=0, depth=2, location=(0, 0, 0), scale=(1, 1, 1))
-
         if (randomObject == 6):
             bpy.ops.mesh.primitive_torus_add(location=(0, 0, 0), rotation=(
                 0, 0, 0), major_radius=1, minor_radius=0.25, abso_major_rad=1.25, abso_minor_rad=0.75)
@@ -364,18 +346,19 @@ class OBJECT_OT_randomOP(bpy.types.Operator):
                 bpy.ops.object.add_iterations_outer()
             if (randomOperator == 2):
                 bpy.ops.object.add_iterations_inner()
-            if (randomOperator == 3):
-                bpy.ops.object.create_spirale()
+            if (randomOperator == 3 and i > 1):
+                bpy.ops.object.create_spiral()
                 self.joinAndResize()
                 maxOp = 2
+            elif(randomOperator == 3 and i == 1):
+                i -= 1
 
     def execute(self, context):
         self.randomOP()
         return {'FINISHED'}
 
 
-class fractalPanel(bpy.types.Panel):
-    """Creates a Panel in the scene context of the properties editor"""
+class VIEW3D_PT_fractal(bpy.types.Panel):
     bl_label = "Fractal Panel"
     bl_idname = "VIEW_3D_PT_fractalPanel"
     bl_space_type = 'VIEW_3D'
@@ -406,27 +389,27 @@ class fractalPanel(bpy.types.Panel):
 
         layout.label(text="Fibonacci Spiral For Active Object: ")
         row = layout.row()
-        row.operator("object.create_spirale", text="Create Fibonacci Spiral")
+        row.operator("object.create_spiral", text="Create Fibonacci Spiral")
 
         layout.label(text="Random:")
         row = layout.row()
         row.operator("object.random_op", text="Will It Crash?")
 
 
+modules = [OBJECT_OT_iterations_inner, OBJECT_OT_iterations_outer,
+           OBJECT_OT_randomOP, OBJECT_OT_spiral, VIEW3D_PT_fractal]
+
+
 def register():
-    bpy.utils.register_class(OBJECT_OT_iterations_outer)
-    bpy.utils.register_class(OBJECT_OT_iterations_inner)
-    bpy.utils.register_class(fractalPanel)
-    bpy.utils.register_class(OBJECT_OT_spirale)
-    bpy.utils.register_class(OBJECT_OT_randomOP)
+
+    for m in modules:
+        bpy.utils.register_class(m)
     bpy.ops.object.add_iterations_outer('INVOKE_DEFAULT')
     bpy.ops.object.add_iterations_inner('INVOKE_DEFAULT')
-    bpy.ops.object.create_spirale('INVOKE_DEFAULT')
+    bpy.ops.object.create_spiral('INVOKE_DEFAULT')
 
 
 def unregister():
-    bpy.utils.unregister_class(OBJECT_OT_iterations_outer)
-    bpy.utils.unregister_class(fractalPanel)
-    bpy.utils.unregister_class(OBJECT_OT_iterations_inner)
-    bpy.utils.unregister_class(OBJECT_OT_spirale)
-    bpy.utils.unregister_class(OBJECT_OT_randomOP)
+
+    for m in modules:
+        bpy.utils.unregister_class(m)
